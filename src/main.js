@@ -6,19 +6,22 @@ import { GLTFLoader, OrbitControls } from "three/examples/jsm/Addons.js";
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x626262);
 
+// camera
 const camera = new THREE.PerspectiveCamera(
-	75,
-	window.innerWidth / window.innerHeight
+	50,
+	window.innerWidth / window.innerHeight,
+	0.5,
+	35
 );
+camera.position.set(-3, 2, 5);
 
 // renderer
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const canvas = document.querySelector("canvas.threejs");
+const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvas });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-document.body.appendChild(renderer.domElement);
 
-// Torus
-const geometry = new THREE.SphereGeometry(2, 50, 50);
+// mesh
+const geometry = new THREE.BoxGeometry(2, 2, 2);
 const material = new THREE.MeshPhongMaterial({ color: 0xff0000 });
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
@@ -29,10 +32,13 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
 directionalLight.position.set(3, 4, 4);
 scene.add(ambientLight, directionalLight);
 
-// camera control
-const controls = new OrbitControls(camera, renderer.domElement);
-camera.position.set(-3, 2, 5);
-controls.update();
+// orbit control
+const controls = new OrbitControls(camera, canvas);
+controls.maxDistance = 30;
+controls.minDistance = 7;
+controls.autoRotate = true;
+controls.enableDamping = true;
+// controls.dampingFactor = 0.1;
 
 // responsiveness
 window.addEventListener("resize", () => {
@@ -45,9 +51,9 @@ window.addEventListener("resize", () => {
 });
 
 function animate() {
-	requestAnimationFrame(animate);
-	mesh.rotation.y -= 0.01;
+	controls.update();
 	renderer.render(scene, camera);
+	requestAnimationFrame(animate);
 }
 
 animate();
