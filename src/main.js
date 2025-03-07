@@ -9,16 +9,16 @@ scene.background = new THREE.Color(0x2f2f2f);
 
 // camera
 const camera = new THREE.PerspectiveCamera(
-	75,
+	35,
 	window.innerWidth / window.innerHeight,
 	0.1,
-	1000
+	250
 );
 camera.position.set(-2, 2, 5);
 
 // cube
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+const material = new THREE.MeshStandardMaterial({ color: "red" });
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
@@ -36,8 +36,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 const controls = new OrbitControls(camera, canvas);
 controls.autoRotate = true;
 controls.enableDamping = true;
-controls.dampingFactor = 1;
-scene.add(controls);
 
 function animate() {
 	controls.update();
